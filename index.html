@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Xhrome OS Setup</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f8cdda, #1e90ff);
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #container {
+      text-align: center;
+      width: 100%;
+    }
+
+    .logo {
+      width: 64px;
+      margin-top: 20px;
+    }
+
+    .dialog {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .dialog h2 {
+      margin: 0 0 10px;
+    }
+
+    .dialog p {
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.blue {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    #download-screen {
+      font-family: monospace;
+      background: black;
+      color: #0f0;
+      padding: 40px;
+      width: 80%;
+      height: 50vh;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    #setup-wizard {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    #terminal {
+      font-family: monospace;
+      background: #000;
+      color: #0f0;
+      padding: 20px;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+    }
+
+    #terminal .terminal-header {
+      background: #111;
+      padding: 10px;
+      font-weight: bold;
+      border-bottom: 1px solid #333;
+    }
+
+    #terminal .terminal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Powerwash screen -->
+    <div id="powerwash-screen">
+      <img src="https://www.google.com/chrome/static/images/favicons/favicon-96x96.png" alt="Chrome Logo" class="logo">
+      <h1>chrome</h1>
+      <div class="dialog">
+        <h2>Powerwash</h2>
+        <p>This action will reset your Chromebook. All user accounts and local data will be removed.</p>
+        <div class="buttons">
+          <button id="cancelBtn">Cancel</button>
+          <button id="resetBtn" class="blue">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fake download screen -->
+    <div id="download-screen" class="hidden">
+      <pre class="terminal-text">
+Resetting device...
+Downloading system files...
+Verifying packages...
+Installing updates...
+Please wait...
+      </pre>
+    </div>
+
+    <!-- Setup wizard -->
+    <div id="setup-wizard" class="hidden">
+      <h1>Xhrome OS Setup Wizard</h1>
+      <p>Insert recovery media to continue...</p>
+      <button id="insertMedia">Insert USB</button>
+    </div>
+
+    <!-- Terminal -->
+    <div id="terminal" class="hidden">
+      <div class="terminal-header">Xhrome OS Terminal</div>
+      <div class="terminal-body">
+        <pre>$ welcome to Xhrome OS terminal
+$ _</pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const resetBtn = document.getElementById('resetBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const powerwashScreen = document.getElementById('powerwash-screen');
+    const downloadScreen = document.getElementById('download-screen');
+    const setupWizard = document.getElementById('setup-wizard');
+    const terminal = document.getElementById('terminal');
+    const insertMediaBtn = document.getElementById('insertMedia');
+
+    cancelBtn.addEventListener('click', () => {
+      alert("Cancelled");
+    });
+
+    resetBtn.addEventListener('click', () => {
+      powerwashScreen.classList.add('hidden');
+      downloadScreen.classList.remove('hidden');
+
+      setTimeout(() => {
+        downloadScreen.classList.add('hidden');
+        setupWizard.classList.remove('hidden');
+      }, 5000); // 5 second fake download
+    });
+
+    insertMediaBtn.addEventListener('click', () => {
+      setupWizard.innerHTML = `<h1>Extracting Recovery Files...</h1><p>Please wait...</p>`;
+      setTimeout(() => {
+        setupWizard.innerHTML = `<h1>Setup Complete</h1><p>Press CMD + T to open Terminal.</p>`;
+      }, 3000);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 't') {
+        terminal.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
